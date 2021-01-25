@@ -31,6 +31,7 @@ function App(props) {
     
     let idNr = 0;
 
+    // takes data about poems
     useEffect(() => {
         axios.get(apiUrl)
         .then(response => {
@@ -39,7 +40,6 @@ function App(props) {
     }, [apiUrl])
     
 
-     
     useEffect(() => {
         for (let i = 0; i < props.squares.length; i++){
             if (props.squares[i].step > largest) {
@@ -51,15 +51,16 @@ function App(props) {
                }
             }
         }
-        console.log(endGame)
-
         var poetryBox = document.querySelector('.poetryBox');
         poetryBox.scrollTop = poetryBox.scrollHeight - poetryBox.clientHeight;
     })
     
+    // handles clicks on squares, checks which squares can be clicked
     const handleClick = (e, id) => {
         if(e.target.className === 'squares 0' && (id > 23 || e.target.parentElement.childNodes[id + 6].className === "squares black" || e.target.parentElement.childNodes[id + 6].className === "squares white")){
+            // determines whose move is now
             setToggled(!turn)
+            // checks the data that is taken by api
             if(items){
                 for(items[rnTitleNr].lines[rnLineNr] !== undefined; rnLineNr = Math.floor(Math.random() * 161);){
                     if (items[rnTitleNr].lines[rnLineNr] !== undefined){
@@ -81,7 +82,11 @@ function App(props) {
         props.changeProp(id, turn, abilityToMove)
     };
     
+    // function that erases the lasts moves in the game
     const moveBack = () => {
+        if(poemLines.length !== 0){
+            setToggled(!turn)
+        }
         poemLines.pop()
         document.getElementsByClassName('board')[0].childNodes[idNr].className = "squares 0";
         props.undoMove()
@@ -89,7 +94,7 @@ function App(props) {
     
     const modalWindowAction = () => {
         document.getElementsByClassName('modalWindow')[0].style.display = "none";
-        // new game 
+        // start a new game 
         setEndGame(endGame = false);
         setPoemLines(poemLines = []);
         for (let i = 0; i < props.squares.length; i++){
@@ -125,12 +130,14 @@ function App(props) {
     )
 };
 
+
 const mapStateToProps = (state) => {
     return {
         squares: state.counter.value
     }
 }
 
+// sending data to reducers/Game to make a new move(changeProp) and undo the previous one(undoMove)
 const mapDispatchToProps = (dispatch) => {
    return {
        changeProp: (id, turn, abilityToMove) => { dispatch({ type: 'CHANGE_SQUARE', id: id, turn: turn, abilityToMove: abilityToMove }) },
