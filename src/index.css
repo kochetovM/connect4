@@ -6,11 +6,12 @@
 }
 
 body {
-  background-color: black;
+  background-color: white;
   display: flex;
   justify-content: center;
   min-height: 100vh;
   padding-top: 4rem;
+  padding-bottom: 4rem;
 }
 .App {
   display: flex;
@@ -55,7 +56,7 @@ body {
 .poetryBox {
   border: 1px solid blue;
   overflow-y: auto;
-  color: white;
+  color: green;
   height: 450px;
   padding: 15px;
 }
