@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux'
 import Board from './components/Board';
+import Window from './components/Window';
 import axios from 'axios'
 
 function App(props) {
@@ -10,7 +11,7 @@ function App(props) {
     });
     const [turn, setToggled] = useState(false);
     
-    const [poemLines, setPoemLines] = useState([])
+    let [poemLines, setPoemLines] = useState([]);
 
     let abilityToMove = true;
 
@@ -18,20 +19,42 @@ function App(props) {
 
     let rnLineNr = Math.floor(Math.random() * 1000);
 
-    const url = `https://poetrydb.org/author/Shakespeare`;
+    const apiUrl = `https://poetrydb.org/author/Shakespeare`;
 
-    const [items, setItems] = useState(null)
+    const imgUrl = `https://www.logolynx.com/images/logolynx/af/af99ef1a19d2f3ae098f4a25ee3a79c8.gif`;
+    
+    const [items, setItems] = useState(null);
+    
+    let [endGame, setEndGame] = useState(false);
+
+    let largest = 0;
+    
+    let idNr = 0;
 
     useEffect(() => {
-        axios.get(url)
+        axios.get(apiUrl)
         .then(response => {
              setItems(response.data)
         })
-    }, [url])
+    }, [apiUrl])
     
+
+     
     useEffect(() => {
+        for (let i = 0; i < props.squares.length; i++){
+            if (props.squares[i].step > largest) {
+               largest = props.squares[i].step;
+               idNr = i;
+               if(largest === 30){
+                    setEndGame(endGame = true);
+                    document.getElementsByClassName('modalWindow')[0].style.display = "block"
+               }
+            }
+        }
+        console.log(endGame)
+
         var poetryBox = document.querySelector('.poetryBox');
-          poetryBox.scrollTop = poetryBox.scrollHeight - poetryBox.clientHeight;
+        poetryBox.scrollTop = poetryBox.scrollHeight - poetryBox.clientHeight;
     })
     
     const handleClick = (e, id) => {
@@ -46,11 +69,6 @@ function App(props) {
                         }])   
                     }
                 }
-            }else{
-                setPoemLines([ ...poemLines, {
-                    title: 'Loading API...',
-                    line: null
-                }])   
             }
         }
         if (e.target.parentElement.childNodes[id + 6] !== undefined){
@@ -61,26 +79,35 @@ function App(props) {
             }
         }
         props.changeProp(id, turn, abilityToMove)
-    }
+    };
     
     const moveBack = () => {
-        let largest = 0;
-        let idNr = 0;
         poemLines.pop()
-        for (let i = 0; i < props.squares.length; i++){
-           if (props.squares[i].step > largest) {
-              largest = props.squares[i].step;
-              idNr = i
-           }
-        }
-        document.getElementsByClassName('board')[0].childNodes[idNr].className = "squares 0"
+        document.getElementsByClassName('board')[0].childNodes[idNr].className = "squares 0";
         props.undoMove()
-    }
+    };
+    
+    const modalWindowAction = () => {
+        document.getElementsByClassName('modalWindow')[0].style.display = "none";
+        // new game 
+        setEndGame(endGame = false);
+        setPoemLines(poemLines = []);
+        for (let i = 0; i < props.squares.length; i++){
+            props.squares[i].state = 0;
+            props.squares[i].step = 0;
+
+        }
+    };
 
     return(
         <div className="App">
             <div>
                 <Board newValues={newValues} onClick={handleClick}/>
+                <div className="moveTurn">
+                    <p>
+                        {!turn ? 'Player 1 turn' : 'Player 2 turn'}
+                    </p>
+                </div>
             </div>
             <div>
                 <div className="poetryBox">    
@@ -91,8 +118,9 @@ function App(props) {
                         </div> 
                     ))}
                 </div>
-                <button onClick={moveBack}>Undo last move</button>
+                <button className="undoButton" onClick={moveBack}>Undo last move</button>
             </div>
+            <Window items={items} imgUrl={imgUrl} endGame={endGame} onClick={modalWindowAction} />
         </div>
     )
 };

@@ -53,14 +53,98 @@ body {
   background-size: cover; 
 }
 
+.moveTurn {
+  position: relative;
+  top: 10px;
+  right: -280px;
+  color: black;
+  margin-left: 200px;
+}
+
+.moveTurn p {
+  font-size: 20px;
+  font-family: 'Trebuchet MS', sans-serif;
+}
+
 .poetryBox {
   border: 1px solid blue;
   overflow-y: auto;
   color: green;
   height: 450px;
   padding: 15px;
+  scrollbar-width: thin;
+  scrollbar-color: blue;
 }
 
 .poetryBox div {
-  margin-bottom: 14px; 
+  margin-bottom: 20px; 
+}
+
+.poetryBox div p {
+  font-family: 'Trebuchet MS', sans-serif;
+}
+
+.poetryBox div p:nth-child(2) {
+  margin-top: 8px;
+}
+
+.undoButton {
+  margin-top: 5px;
+  height: 45px;
+  font-size: 20px;
+  font-family: 'Brush Script MT', cursive;
+  background-color: rgb(77, 77, 177);
+  border: none;
+  color: white;
+}
+
+.modalWindow {
+  z-index: 3;
+  display: block;
+  padding-top: 140px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.Window {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(236, 236, 236, 0.911);
+  border-radius: 1%;
+  margin: 0 auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  height: 60%; 
+  width: 50%; 
+}
+
+.Window img {
+  width: 400px;
+  margin-bottom: 20px;
+}
+
+.Window button {
+  width: 200px;
+  height: 50px;
+  border-radius: 1%;
+  font-size: 20px;
+  font-family: 'Brush Script MT', cursive;
+  background-color: rgb(77, 77, 177);
+  color: white;
+}
+
+.Window p {
+  text-align: center;
+  font-size: 30px;
+  font-family: 'Brush Script MT', cursive;
+  color:rgb(77, 77, 177);
+  margin-bottom: 10px;
 }
