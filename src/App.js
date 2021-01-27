@@ -123,7 +123,9 @@ function App(props) {
                         </div> 
                     ))}
                 </div>
-                <button className="undoButton" onClick={moveBack}>Undo last move</button>
+                <div >
+                    <button className="undoButton"  onClick={moveBack}>Undo last move</button>
+                </div>
             </div>
             <Window items={items} imgUrl={imgUrl} endGame={endGame} onClick={modalWindowAction} />
         </div>
