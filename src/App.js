@@ -5,19 +5,12 @@ import Window from './components/Window';
 import axios from 'axios'
 
 function App(props) {
-    
-    let newValues = props.squares.map(square => {
-        return square;
-    });
+
     const [turn, setToggled] = useState(false);
     
     let [poemLines, setPoemLines] = useState([]);
 
     let abilityToMove = true;
-
-    let rnTitleNr = Math.floor(Math.random() * 161); 
-
-    let rnLineNr = Math.floor(Math.random() * 1000);
 
     const apiUrl = `https://poetrydb.org/author/Shakespeare`;
 
@@ -37,7 +30,7 @@ function App(props) {
         .then(response => {
              setItems(response.data)
         })
-    }, [apiUrl])
+    }, [])
     
 
     useEffect(() => {
@@ -62,15 +55,21 @@ function App(props) {
             setToggled(!turn)
             // checks the data that is taken by api
             if(items){
-                for(items[rnTitleNr].lines[rnLineNr] !== undefined; rnLineNr = Math.floor(Math.random() * 161);){
-                    if (items[rnTitleNr].lines[rnLineNr] !== undefined){
-                        setPoemLines([ ...poemLines, {
-                            title: items[rnTitleNr].title + ':',
-                            line: items[rnTitleNr].lines[rnLineNr]
-                        }])   
+                let rnTitleNr = Math.floor(Math.random() * 161);
+
+                if (items[rnTitleNr] !== undefined){
+                    let rnLineNr =Math.floor(Math.random() * (items[rnTitleNr].lines.length-1) );
+
+                    while ( rnLineNr === undefined || items[rnTitleNr].lines[rnLineNr] === "") {
+                        rnLineNr = Math.floor(Math.random() * (items[rnTitleNr].lines.length-1) );
                     }
+                    setPoemLines([ ...poemLines, {
+                        title: items[rnTitleNr].title + ':',
+                        line: items[rnTitleNr].lines[rnLineNr]
+                    }])
                 }
             }
+
         }
         if (e.target.parentElement.childNodes[id + 6] !== undefined){
             if (e.target.parentElement.childNodes[id + 6].className === "squares black" || e.target.parentElement.childNodes[id + 6].className === "squares white"){
@@ -88,7 +87,6 @@ function App(props) {
             setToggled(!turn)
         }
         poemLines.pop()
-        document.getElementsByClassName('board')[0].childNodes[idNr].className = "squares 0";
         props.undoMove()
     };
     
@@ -107,7 +105,7 @@ function App(props) {
     return(
         <div className="App">
             <div>
-                <Board newValues={newValues} onClick={handleClick}/>
+                <Board newValues={props.squares} onClick={handleClick}/>
                 <div className="moveTurn">
                     <p>
                         {!turn ? 'Player 1 turn' : 'Player 2 turn'}
@@ -124,7 +122,7 @@ function App(props) {
                     ))}
                 </div>
                 <div >
-                    <button className="undoButton"  onClick={moveBack}>Undo last move</button>
+                    <button className="undoButton"  onClick={moveBack}>Undo</button>
                 </div>
             </div>
             <Window items={items} imgUrl={imgUrl} endGame={endGame} onClick={modalWindowAction} />
