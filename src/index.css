@@ -1,64 +1,47 @@
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  width: 100%;
-}
 
-body {
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  min-height: 100vh;
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-}
 .App {
-  display: flex;
-  margin: 0 auto;
-  justify-content: space-around;
-  width: 80%;
-}
-.App div:nth-child(2){
-   width: 56%;
+  justify-items: stretch;
+  margin: 20px;
+  margin-top: 40px;
+  width: 120%;
 }
 
+.boardcol {
+  margin-bottom: 20px;
+}
 .board {
-  border: 6px solid #0c6dbd;
-  background: #0c6dbd;
-  width: 600px;
-  height: 500px;
+  background: white;
+  width: 100%;
+  height: 450px;
   display: grid;
   grid-template: repeat(5, 1fr) / repeat(6, 1fr);
-  gap: 6px;
+  gap: 3px;
 }
 
 .squares {
-  background: #272727;
+  background: #0c6dbd;
+  border-radius: 15px;
   border: none;
-  font-size: 2rem;
   color: rgba(0, 0, 0, 0);
   cursor: pointer;
   outline: none;
 }
 
 .black {
-  background-image:url('https://pbs.twimg.com/profile_images/378800000118489223/e48987243d156522db695b29c58ac37c.jpeg');
+  background-image:url("https://i.ibb.co/q1Pkfx8/darshan-chudasama-kbcp-VCS74-Dw-unsplash.jpg" );
   background-position: center;
   background-size: cover; 
 }
 .white {
-  background-image:url('https://i.etsystatic.com/17740671/r/il/41d355/1598339451/il_570xN.1598339451_4axu.jpg');
+  background-image:url('https://i.ibb.co/qxw0ZWQ/clyde-rs-4-Xb-ZCf-U2-Uoo-unsplash-2.jpg');
   background-position: center;
-  background-size: cover; 
+  background-size: cover;
 }
 
 .moveTurn {
   position: relative;
-  top: 10px;
-  right: -240px;
   color: black;
-  margin-left: 200px;
+  margin-top: 10px;
 }
 
 .moveTurn p {
@@ -66,39 +49,49 @@ body {
   font-family: 'Trebuchet MS', sans-serif;
 }
 
+.poetry {
+  margin-top: -15px;
+  margin-right: 10px;
+}
+.poetry h5{
+  color: crimson;
+}
+
+.title{
+  margin-top: 15px;
+  margin-bottom:10px ;
+  color: black;
+  font-style: oblique;
+}
 .poetryBox {
-  border: 1px solid blue;
-  overflow-y: auto;
-  color: green;
-  height: 450px;
-  padding: 15px;
+  overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: blue;
+  height: 360px;
+  color: #4d4db1;
 }
-
-.poetryBox div {
-  margin-bottom: 20px; 
-}
-
-.poetryBox div p {
+.poetryBox p {
   font-family: 'Trebuchet MS', sans-serif;
+  margin: 0px;
+  font-size: small;
 }
 
-.poetryBox div p:nth-child(2) {
-  margin-top: 8px;
+.firstcolumn {
+  margin-top: 20px;
 }
 
 .undoButton {
-  margin-top: 5px;
-  margin-left: 25px;
-  height: 45px;
-  font-size: 20px;
+  width: 100%;
+  margin-top: 30px;
+}
+.undoButtonText {
+  height: 40px;
+  font-size: 25px;
   font-family: 'Brush Script MT', cursive;
   background-color: rgb(77, 77, 177);
   border-radius: 12px;
   color: white;
 }
-
 .modalWindow {
   z-index: 3;
   display: block;
@@ -148,4 +141,88 @@ body {
   font-family: 'Brush Script MT', cursive;
   color:rgb(77, 77, 177);
   margin-bottom: 10px;
+}
+
+@media(max-width: 720px) {
+  .board {
+    height: 350px;
+  }
+  .undoButton {
+    margin-top: 25px;
+  }
+  .undoButtonText {
+    height: 35px;
+    font-size: 19px;
+  }
+  .moveTurn p {
+    font-size: 14px;
+    font-family: 'Trebuchet MS', sans-serif;
+  }
+  .poetryBox {
+    height: 260px;
+    margin-top: -10px;
+  }
+  .poetry h5{
+    font-size: small;
+  }
+  .title{
+    margin-top: 7px;
+    margin-bottom:0px ;
+  }
+  .poetry p{
+    font-size: small;
+  }
+
+}
+
+@media(max-width: 460px) {
+  .App {
+    justify-items: stretch;
+    margin: 0px;
+    margin-top: 20px;
+    width: 105%;
+  }
+  .board {
+    height: 200px;
+    width: 210px;
+  }
+  .squares {
+    border-radius: 7px;
+  }
+  .firstcolumn {
+    margin-right: 10px;
+  }
+  .undoButton {
+    margin-top: 10px;
+  }
+  .undoButtonText {
+    height: 25px;
+    font-size: 13px;
+  }
+  .moveTurn p {
+    font-size: 11px;
+    font-family: 'Trebuchet MS', sans-serif;
+  }
+  .poetry {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-left: 40px;
+    width: 100%;
+    padding: 0px;
+  }
+  .poetry h5{
+    font-size: x-small;
+  }
+  .poetryBox {
+    height: 200px;
+    margin-top: -10px;
+    /*margin-right: -10px;*/
+  }
+  .title{
+    margin-top: 4px;
+    margin-bottom:-10px ;
+  }
+  .poetry p{
+    font-size: x-small;
+  }
 }

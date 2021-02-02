@@ -16,7 +16,7 @@ function App(props) {
 
     const imgUrl = `https://www.logolynx.com/images/logolynx/af/af99ef1a19d2f3ae098f4a25ee3a79c8.gif`;
     
-    const [items, setItems] = useState(null);
+    const [poem, setPoem] = useState(null);
     
     let [endGame, setEndGame] = useState(false);
 
@@ -28,7 +28,7 @@ function App(props) {
     useEffect(() => {
         axios.get(apiUrl)
         .then(response => {
-             setItems(response.data)
+             setPoem(response.data)
         })
     }, [])
     
@@ -39,13 +39,12 @@ function App(props) {
                largest = props.squares[i].step;
                idNr = i;
                if(largest === 30){
+                    setPoemLines([]);
                     setEndGame(endGame = true);
                     document.getElementsByClassName('modalWindow')[0].style.display = "block"
                }
             }
         }
-        var poetryBox = document.querySelector('.poetryBox');
-        poetryBox.scrollTop = poetryBox.scrollHeight - poetryBox.clientHeight;
     })
     
     // handles clicks on squares, checks which squares can be clicked
@@ -54,19 +53,18 @@ function App(props) {
             // determines whose move is now
             setToggled(!turn)
             // checks the data that is taken by api
-            if(items){
+            if(poem){
                 let rnTitleNr = Math.floor(Math.random() * 161);
 
-                if (items[rnTitleNr] !== undefined){
-                    let rnLineNr =Math.floor(Math.random() * (items[rnTitleNr].lines.length-1) );
+                if (poem[rnTitleNr] !== undefined){
+                    let wholeLine = poem[rnTitleNr].lines.map((line) => line);
+                    console.log("wholeLine: ", wholeLine)
 
-                    while ( rnLineNr === undefined || items[rnTitleNr].lines[rnLineNr] === "") {
-                        rnLineNr = Math.floor(Math.random() * (items[rnTitleNr].lines.length-1) );
-                    }
-                    setPoemLines([ ...poemLines, {
-                        title: items[rnTitleNr].title + ':',
-                        line: items[rnTitleNr].lines[rnLineNr]
+                    setPoemLines( [...poemLines,{
+                        title: poem[rnTitleNr].title + ':',
+                        line: wholeLine
                     }])
+                    console.log("poemLines: ", poemLines)
                 }
             }
 
@@ -94,7 +92,7 @@ function App(props) {
         document.getElementsByClassName('modalWindow')[0].style.display = "none";
         // start a new game 
         setEndGame(endGame = false);
-        setPoemLines(poemLines = []);
+        setPoemLines([]);
         for (let i = 0; i < props.squares.length; i++){
             props.squares[i].state = 0;
             props.squares[i].step = 0;
@@ -103,29 +101,48 @@ function App(props) {
     };
 
     return(
-        <div className="App">
-            <div>
-                <Board newValues={props.squares} onClick={handleClick}/>
+        <div className="App row">
+            <div className="firstcolumn col-1">
                 <div className="moveTurn">
                     <p>
                         {!turn ? 'Player 1 turn' : 'Player 2 turn'}
                     </p>
                 </div>
-            </div>
-            <div>
-                <div className="poetryBox">    
-                    {poemLines.map((poemLine, id) => (
-                        <div key={id}>
-                            <p>{ poemLine.title }</p>
-                            <p>{ poemLine.line }</p>
-                        </div> 
-                    ))}
+
+                <div className="undoButton">
+                    <button className="undoButtonText" onClick={moveBack}>Undo</button>
                 </div>
-                <div >
-                    <button className="undoButton"  onClick={moveBack}>Undo</button>
-                </div>
+
             </div>
-            <Window items={items} imgUrl={imgUrl} endGame={endGame} onClick={modalWindowAction} />
+            <div className="boardcol col-6">
+                <Board newValues={props.squares} onClick={handleClick}/>
+            </div>
+
+            <div className="poetry col-3">
+            {poemLines.length ?
+                <div>
+                    <h5> -> William Shakespeare </h5>
+
+                    <div className="title">
+                        <p>{ poemLines[poemLines.length-1].title }</p>
+                    </div>
+
+                    <div className="poetryBox">
+                            {poemLines[poemLines.length - 1].line.map((each, id) => (
+                                <div key={id}>
+                                    <p>{ each }</p>
+                                </div>
+                            ))
+                            }
+                    </div>
+                </div>
+                 :
+                 <div>
+                     <h5>-> William Shakespeare</h5>
+                 </div>
+            }
+            </div>
+            <Window items={poem} imgUrl={imgUrl} endGame={endGame} onClick={modalWindowAction} />
         </div>
     )
 };

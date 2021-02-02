@@ -7,7 +7,7 @@ const Window = ({items, imgUrl, endGame, onClick }) => {
             <div className="Window">
                 <img src={imgUrl} alt="Connect 4" />
                 { endGame ? <p>Game Over</p> : '' }
-                { !items ? <p>Loading API</p>  : <button onClick={onClick}>Start new game!</button> }
+                { !items ? <p>Loading </p>  : <button onClick={onClick}>Start new game!</button> }
             </div>
         </div>
     )    

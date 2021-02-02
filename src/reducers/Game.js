@@ -37,12 +37,14 @@ const initValues = {
 const Game = (state = initValues, action) => {
    let largest = 0;
    let idNr = 0;
+
    for (let i = 0; i < state.value.length; i++){
       if (state.value[i].step > largest) {
          largest = state.value[i].step;
          idNr = i;
       }
   }
+
    if (action.type === 'CHANGE_SQUARE') {
       let newValue = state.value.map(value => {
          if (action.id === value.id && value.state === 0){
