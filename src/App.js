@@ -6,11 +6,9 @@ import axios from 'axios'
 
 function App(props) {
 
-    const [turn, setToggled] = useState(false);
+    const [turn, setTurnToggled] = useState(false);
     
     let [poemLines, setPoemLines] = useState([]);
-
-    let abilityToMove = true;
 
     const apiUrl = `https://poetrydb.org/author/Shakespeare`;
 
@@ -19,10 +17,7 @@ function App(props) {
     const [poem, setPoem] = useState(null);
     
     let [endGame, setEndGame] = useState(false);
-
-    let largest = 0;
-    
-    let idNr = 0;
+    let [winner, setWinner] = useState("");
 
     // takes data about poems
     useEffect(() => {
@@ -34,79 +29,114 @@ function App(props) {
     
 
     useEffect(() => {
-        for (let i = 0; i < props.squares.length; i++){
-            if (props.squares[i].step > largest) {
-               largest = props.squares[i].step;
-               idNr = i;
-               if(largest === 30){
-                    setPoemLines([]);
-                    setEndGame(endGame = true);
-                    document.getElementsByClassName('modalWindow')[0].style.display = "block"
-               }
-            }
+        if(props.lastStep === 42){
+            setEndGame(endGame = true);
+            document.getElementsByClassName('modalWindow')[0].style.display = "block"
         }
     })
+
+    const checkbyHorizontal = (id, way, player, row) => {
+        let row_current = Math.floor( (id+1)/7 - 0.01  );
+        if (row !== row_current ) return 0;
+
+        if (props.squares[id].player === player)
+            return 1 + checkbyHorizontal(id+way, way, player,row);
+        else return 0;
+    }
+    const checkbyVertical = (id, player) => {
+        if ( id < 42 && props.squares[id].player === player )
+            return 1 + checkbyVertical(id+7, player);
+        else return 0;
+    }
+    const checkbyDiagonal = (id, way, player, row) => {
+        let row_current = Math.floor( (id+1)/7 - 0.01  );
+        let step = Math.abs(row - row_current);
+
+        if (step !== 1 || id < 0 || id > 41 ) return 0;
+
+        if (props.squares[id].player === player)
+            return 1 + checkbyDiagonal(id+way, way, player, row_current);
+        else return 0;
+    }
+
+    const checkforWin = (id,player) => {
+
+        let row = Math.floor( (id+1)/7 - 0.01  );
+        let total = 1 + checkbyHorizontal(id-1, -1, player,row) + checkbyHorizontal(id+1, 1, player, row);
+        if (total > 3) return true;
+
+        total = 1 + checkbyVertical((id+7), player);
+        if (total > 3) return true;
+
+        total = 1 + checkbyDiagonal((id-6),-6, player, row) + checkbyDiagonal((id+6),6, player, row);
+        if (total > 3) return true;
+
+        total = 1 + checkbyDiagonal((id-8),-8, player, row) + checkbyDiagonal((id+8),8, player, row);
+        if (total > 3) return true;
+
+        return false;
+    }
     
     // handles clicks on squares, checks which squares can be clicked
     const handleClick = (e, id) => {
-        if(e.target.className === 'squares 0' && (id > 23 || e.target.parentElement.childNodes[id + 6].className === "squares black" || e.target.parentElement.childNodes[id + 6].className === "squares white")){
+        if(!winner && !props.squares[id].player && (id > 34 || props.squares[id + 7].player === "black" || props.squares[id + 7].player === "white")){
             // determines whose move is now
-            setToggled(!turn)
+            setTurnToggled(!turn)
             // checks the data that is taken by api
             if(poem){
                 let rnTitleNr = Math.floor(Math.random() * 161);
 
                 if (poem[rnTitleNr] !== undefined){
                     let wholeLine = poem[rnTitleNr].lines.map((line) => line);
-                    console.log("wholeLine: ", wholeLine)
 
                     setPoemLines( [...poemLines,{
                         title: poem[rnTitleNr].title + ':',
                         line: wholeLine
                     }])
-                    console.log("poemLines: ", poemLines)
+                   // console.log("poemLines: ", poemLines)
                 }
             }
 
-        }
-        if (e.target.parentElement.childNodes[id + 6] !== undefined){
-            if (e.target.parentElement.childNodes[id + 6].className === "squares black" || e.target.parentElement.childNodes[id + 6].className === "squares white"){
-                abilityToMove = true;
-            }else{
-                abilityToMove = false;
+            props.changeProp(id, turn)
+
+            if (checkforWin(id, props.squares[id].player)) {
+                if (props.squares[id].player === "black") setWinner("Player 1");
+                else setWinner("Player 2");
             }
+
         }
-        props.changeProp(id, turn, abilityToMove)
     };
     
     // function that erases the lasts moves in the game
     const moveBack = () => {
-        if(poemLines.length !== 0){
-            setToggled(!turn)
+        if(props.lastStep !== 0){
+            setTurnToggled(!turn)
+            poemLines.pop()
+            if (winner) setWinner("");
+            props.undoMove()
         }
-        poemLines.pop()
-        props.undoMove()
     };
     
     const modalWindowAction = () => {
         document.getElementsByClassName('modalWindow')[0].style.display = "none";
         // start a new game 
         setEndGame(endGame = false);
+        setWinner("");
         setPoemLines([]);
-        for (let i = 0; i < props.squares.length; i++){
-            props.squares[i].state = 0;
-            props.squares[i].step = 0;
-
-        }
+        props.newGame();
     };
 
     return(
         <div className="App row">
             <div className="firstcolumn col-1">
                 <div className="moveTurn">
-                    <p>
-                        {!turn ? 'Player 1 turn' : 'Player 2 turn'}
-                    </p>
+                    {winner ?
+                        <p> {winner} Wins! </p>
+                        :
+                        <p>
+                            {!turn ? "Player's 1 turn" : "Player's 2 turn" }
+                        </p>
+                    }
                 </div>
 
                 <div className="undoButton">
@@ -150,15 +180,17 @@ function App(props) {
 
 const mapStateToProps = (state) => {
     return {
-        squares: state.counter.value
+        squares: state.counter.value,
+        lastStep: state.counter.lastStep
     }
 }
 
 // sending data to reducers/Game to make a new move(changeProp) and undo the previous one(undoMove)
 const mapDispatchToProps = (dispatch) => {
    return {
-       changeProp: (id, turn, abilityToMove) => { dispatch({ type: 'CHANGE_SQUARE', id: id, turn: turn, abilityToMove: abilityToMove }) },
-       undoMove: () => { dispatch({ type: 'UNDO_MOVE' }) }
+       changeProp: (id, turn) => { dispatch({ type: 'CHANGE_SQUARE', id: id, turn: turn }) },
+       undoMove: () => { dispatch({ type: 'UNDO_MOVE' }) },
+       newGame: () => { dispatch({ type: 'NEW_GAME' }) }
    }
 }
 
