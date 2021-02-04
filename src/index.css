@@ -5,6 +5,27 @@
   margin-top: 40px;
   width: 120%;
 }
+.gamename {
+  font-family: "Montserrat";
+  margin-left: 80px;
+  color: #FFF;
+  display: flex;
+  flex-direction: column;
+  letter-spacing: 1px;
+}
+
+.gamename h1 {
+  background-image: url(https://media.giphy.com/media/26BROrSHlmyzzHf3i/giphy.gif);
+  background-size: cover;
+  color: transparent;
+  -moz-background-clip: text;
+  -webkit-background-clip: text;
+  text-transform: uppercase;
+  font-size: 60px;
+  line-height: 1;
+  margin: 10px 0;
+}
+/* styling my button */
 
 .boardcol {
   margin-bottom: 20px;
@@ -39,14 +60,16 @@
 }
 
 .moveTurn {
-  position: relative;
+  position: center;
   color: black;
-  margin-top: 10px;
 }
 
 .moveTurn p {
   font-size: 20px;
   font-family: 'Trebuchet MS', sans-serif;
+}
+.newGameButton {
+  margin-left: -40px;
 }
 
 .poetry {
@@ -76,21 +99,32 @@
   font-size: small;
 }
 
-.firstcolumn {
+.headrow {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
-.undoButton {
-  width: 100%;
-  margin-top: 30px;
+.myButton {
+  background:linear-gradient(to bottom, #ffc477 5%, #fb9e25 100%);
+  background-color:#ffc477;
+  border-radius:16px;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+  font-family:Trebuchet MS;
+  font-size:14px;
+  font-weight:bold;
+  font-style: italic;
+  padding:12px 16px;
+  text-decoration:none;
 }
-.undoButtonText {
-  height: 40px;
-  font-size: 25px;
-  font-family: 'Brush Script MT', cursive;
-  background-color: rgb(77, 77, 177);
-  border-radius: 12px;
-  color: white;
+.myButton:hover {
+  background:linear-gradient(to bottom, #fb9e25 5%, #ffc477 100%);
+  background-color:#fb9e25;
+}
+.myButton:active {
+  position:relative;
+  top:1px;
 }
 .modalWindow {
   z-index: 3;
@@ -143,21 +177,34 @@
   margin-bottom: 10px;
 }
 
-@media(max-width: 720px) {
+@media(max-width: 760px) {
   .board {
     height: 350px;
   }
-  .undoButton {
-    margin-top: 25px;
+  .newGameButton {
+    margin-left: -40px;
   }
-  .undoButtonText {
-    height: 35px;
-    font-size: 19px;
+
+  .gamename {
+    margin-left: 40px;
+  }
+  .gamename h1 {
+    font-size: 35px;
+    margin: 10px 0;
   }
   .moveTurn p {
     font-size: 14px;
     font-family: 'Trebuchet MS', sans-serif;
   }
+  .headrow {
+    margin-bottom: 15px;
+  }
+  .myButton {
+    border-radius:11px;
+    font-size:10px;
+    padding: 9px 12px;
+  }
+
   .poetryBox {
     height: 260px;
     margin-top: -10px;
@@ -189,16 +236,25 @@
   .squares {
     border-radius: 7px;
   }
-  .firstcolumn {
-    margin-right: 10px;
+
+  .gamename {
+    margin-left: 20px;
   }
-  .undoButton {
-    margin-top: 10px;
+  .gamename h1 {
+    font-size: 25px;
+    margin: 0px 0;
   }
-  .undoButtonText {
-    height: 25px;
-    font-size: 13px;
+  .headrow {
+    margin-bottom: 5px;
   }
+  .newGameButton {
+    margin-left: -10px;
+  }
+  .myButton {
+    font-size: 8px;
+    padding: 4px 10px;
+  }
+
   .moveTurn p {
     font-size: 11px;
     font-family: 'Trebuchet MS', sans-serif;

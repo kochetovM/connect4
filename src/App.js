@@ -29,7 +29,7 @@ function App(props) {
     
 
     useEffect(() => {
-        if(props.lastStep === 42){
+        if(props.lastStep === 42){ //checks if board is full then pop up Game Over Msg
             setEndGame(endGame = true);
             document.getElementsByClassName('modalWindow')[0].style.display = "block"
         }
@@ -93,7 +93,6 @@ function App(props) {
                         title: poem[rnTitleNr].title + ':',
                         line: wholeLine
                     }])
-                   // console.log("poemLines: ", poemLines)
                 }
             }
 
@@ -116,6 +115,9 @@ function App(props) {
             props.undoMove()
         }
     };
+    const newGame = () =>{
+        document.getElementsByClassName('modalWindow')[0].style.display = "block";
+    }
     
     const modalWindowAction = () => {
         document.getElementsByClassName('modalWindow')[0].style.display = "none";
@@ -127,9 +129,17 @@ function App(props) {
     };
 
     return(
-        <div className="App row">
-            <div className="firstcolumn col-1">
-                <div className="moveTurn">
+        <div className="App container-fluid">
+            <div className="gamename row">
+                <h1>Poetic Connect 4</h1>
+            </div>
+
+            <div className="headrow row">
+                <div className="col-2">
+                    <button className="myButton" onClick={moveBack}>Undo</button>
+                </div>
+
+                <div className="col-3 moveTurn">
                     {winner ?
                         <p> {winner} Wins! </p>
                         :
@@ -139,38 +149,40 @@ function App(props) {
                     }
                 </div>
 
-                <div className="undoButton">
-                    <button className="undoButtonText" onClick={moveBack}>Undo</button>
+                <div className="newGameButton col-3">
+                    <button className="myButton" onClick={newGame}>New Game</button>
                 </div>
 
             </div>
-            <div className="boardcol col-6">
-                <Board newValues={props.squares} onClick={handleClick}/>
-            </div>
 
-            <div className="poetry col-3">
-            {poemLines.length ?
-                <div>
-                    <h5> -> William Shakespeare </h5>
-
-                    <div className="title">
-                        <p>{ poemLines[poemLines.length-1].title }</p>
-                    </div>
-
-                    <div className="poetryBox">
-                            {poemLines[poemLines.length - 1].line.map((each, id) => (
-                                <div key={id}>
-                                    <p>{ each }</p>
-                                </div>
-                            ))
-                            }
-                    </div>
+            <div className="row">
+                <div className="boardcol col-6">
+                    <Board newValues={props.squares} onClick={handleClick}/>
                 </div>
-                 :
-                 <div>
-                     <h5>-> William Shakespeare</h5>
-                 </div>
-            }
+
+                <div className="poetry col-3">
+                {poemLines.length ?
+                    <div>
+                        <h5> -> William Shakespeare </h5>
+
+                        <div className="title">
+                            <p>{ poemLines[poemLines.length-1].title }</p>
+                        </div>
+                        <div className="poetryBox">
+                                {poemLines[poemLines.length - 1].line.map((each, id) => (
+                                    <div key={id}>
+                                        <p>{ each }</p>
+                                    </div>
+                                ))
+                                }
+                        </div>
+                    </div>
+                     :
+                     <div>
+                         <h5>-> William Shakespeare</h5>
+                     </div>
+                }
+                </div>
             </div>
             <Window items={poem} imgUrl={imgUrl} endGame={endGame} onClick={modalWindowAction} />
         </div>
