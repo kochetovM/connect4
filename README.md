@@ -1,5 +1,8 @@
-# Connect-4 Game with a random Shakespeare's sonnets for user entertainment =). 
-The project build on React with using Redux state management
+# Connect-4 Game with a random Shakespeare's sonnets =). 
+The project build on React with using Redux state management. Rest Api endpoint used for getting poems.
+
+### `Preview weblink`
+https://kochetovm.github.io/connect4/
 
 # Getting Started with Create React App
 
